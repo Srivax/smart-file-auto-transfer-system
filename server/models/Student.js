@@ -9,5 +9,7 @@ const studentSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+studentSchema.index({ roll: 1 });
+studentSchema.index({ subject: 1 });
 
 export default mongoose.model("Student", studentSchema);

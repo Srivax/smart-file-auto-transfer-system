@@ -4,6 +4,8 @@ import cors from "cors";
 import mongoose from "mongoose";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+import studentRoutes from "./routes/studentRoutes.js";
+import analyticsRoutes from "./routes/analyticsRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -14,6 +16,8 @@ app.use(express.json());
 
 // api routes
 app.use("/api/upload", uploadRoutes);
+app.use("/api/students", studentRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
