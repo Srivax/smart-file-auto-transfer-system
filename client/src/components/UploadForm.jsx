@@ -1,69 +1,61 @@
-import { useRef } from "react";
+export default function UploadForm({
+  selectedFile,
+  onFileSelect,
+  onUpload,
+  onClear,
+  isUploading
+}) {
+  const handleFileChange = (event) => {
+    const file = event.target.files && event.target.files[0] ? event.target.files[0] : null;
+    onFileSelect(file);
+  };
 
-function UploadForm({ selectedFile, onFileChange, onUpload, isUploading }) {
-const fileInputRef = useRef(null);
-
-const handleBrowseClick = () => {
-if (fileInputRef.current) {
-fileInputRef.current.click();
-}
-};
-
-const handleFileChangeInternal = (event) => {
-const file = event.target.files && event.target.files[0];
-if (!file) return;
-if (onFileChange) {
-onFileChange(file);
-}
-};
-
-const handleUploadClick = () => {
-if (onUpload) {
-onUpload();
-}
-};
-
-return (
-<section className="upload-section">
-<div className="upload-card">
-<div className="upload-row">
-<button type="button" className="btn-file" onClick={handleBrowseClick} >
-Choose file
-</button>
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".xlsx"
-        className="file-input-hidden"
-        onChange={handleFileChangeInternal}
-      />
-
-      <span className="file-label-text">
-        {selectedFile ? selectedFile.name : "No file selected yet"}
-      </span>
-
-      <button
-        type="button"
-        className="btn-upload"
-        onClick={handleUploadClick}
-        disabled={!selectedFile || isUploading}
-      >
-        {isUploading ? "Uploading..." : "Upload"}
-      </button>
+  return (
+    <div className="upload-row">
+      <div>
+        <label className="file-label-text" htmlFor="file-input">
+          Choose Excel file
+        </label>
+        <input
+          id="file-input"
+          className="file-input-hidden"
+          type="file"
+          accept=".xlsx"
+          onChange={handleFileChange}
+        />
+        <button
+          type="button" 
+          style={{marginLeft : "10px"}}
+          className="btn-file"
+          onClick={() => document.getElementById("file-input").click()}
+        >
+          Browse
+        </button>
+        <p className="file-selected-info">
+          Selected file:{" "}
+          <span className="file-selected-name">
+            {selectedFile ? selectedFile.name : "No file selected"}
+          </span>
+        </p>
+      </div>
+      <div style={{ textAlign: "right" }}>
+        <button
+          type="button"
+          className="btn-upload"
+          onClick={onUpload}
+          disabled={isUploading}
+        >
+          {isUploading ? "Uploading..." : "Upload"}
+        </button>
+        <button
+          type="button"
+          className="btn-clear"
+          onClick={onClear}
+          disabled={isUploading && !selectedFile}
+        >
+          Clear
+        </button>
+      </div>
     </div>
-
-    <p className="file-selected-info">
-      Selected file:{" "}
-      <span className="file-selected-name">
-        {selectedFile ? selectedFile.name : "None"}
-      </span>
-    </p>
-  </div>
-</section>
-
-
-);
+  );
 }
-
-export default UploadForm;
