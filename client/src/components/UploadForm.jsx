@@ -1,48 +1,69 @@
-import React, { useState } from 'react'
-import axios from 'axios'
-import { logClientError } from '../utils/logger.js'
+import { useRef } from "react";
 
-export default function UploadForm() {
-  const [file, setFile] = useState(null)
-  const [result, setResult] = useState(null)
-  const [loading, setLoading] = useState(false)
+function UploadForm({ selectedFile, onFileChange, onUpload, isUploading }) {
+const fileInputRef = useRef(null);
 
-  const onSelect = (e) => setFile(e.target.files?.[0] || null)
-
-  const onSubmit = async (e) => {
-    e.preventDefault()
-    if (!file) return alert('Choose an .xlsx file first')
-
-    const form = new FormData()
-    form.append('file', file)
-
-    try {
-      setLoading(true)
-      const { data } = await axios.post('/api/upload', form, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      })
-      setResult(data)
-    } catch (err) {
-      logClientError('Upload failed', { message: err?.message })
-      alert(err?.response?.data?.message || 'Upload failed')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  return (
-    <div style={{ border: '1px solid #ddd', padding: 16, borderRadius: 8 }}>
-      <form onSubmit={onSubmit}>
-        <input type="file" accept=".xlsx" onChange={onSelect} />
-        <button type="submit" style={{ marginLeft: 12 }} disabled={loading}>
-          {loading ? 'Uploading…' : 'Upload'}
-        </button>
-      </form>
-      {result && (
-        <pre style={{ background: '#f7f7f8', padding: 12, borderRadius: 8, marginTop: 16 }}>
-{JSON.stringify(result, null, 2)}
-        </pre>
-      )}
-    </div>
-  )
+const handleBrowseClick = () => {
+if (fileInputRef.current) {
+fileInputRef.current.click();
 }
+};
+
+const handleFileChangeInternal = (event) => {
+const file = event.target.files && event.target.files[0];
+if (!file) return;
+if (onFileChange) {
+onFileChange(file);
+}
+};
+
+const handleUploadClick = () => {
+if (onUpload) {
+onUpload();
+}
+};
+
+return (
+<section className="upload-section">
+<div className="upload-card">
+<div className="upload-row">
+<button type="button" className="btn-file" onClick={handleBrowseClick} >
+Choose file
+</button>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".xlsx"
+        className="file-input-hidden"
+        onChange={handleFileChangeInternal}
+      />
+
+      <span className="file-label-text">
+        {selectedFile ? selectedFile.name : "No file selected yet"}
+      </span>
+
+      <button
+        type="button"
+        className="btn-upload"
+        onClick={handleUploadClick}
+        disabled={!selectedFile || isUploading}
+      >
+        {isUploading ? "Uploading..." : "Upload"}
+      </button>
+    </div>
+
+    <p className="file-selected-info">
+      Selected file:{" "}
+      <span className="file-selected-name">
+        {selectedFile ? selectedFile.name : "None"}
+      </span>
+    </p>
+  </div>
+</section>
+
+
+);
+}
+
+export default UploadForm;
