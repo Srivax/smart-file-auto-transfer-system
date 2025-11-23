@@ -1,0 +1,18 @@
+# Sprint 1 Review: Smart File AutoTransfer System - Upload Module
+
+## Sprint Goal
+- Develop the Upload Excel File module  
+- Enable users to upload Excel mark sheets and receive proper feedback on the upload process
+
+## User Acceptance Points
+1. Users must be able to successfully upload the Excel file.  
+2. Users should receive clear feedback indicating whether all rows were updated properly or if any rows failed and why.
+
+## QA/Business Analyst Perspective
+- Functionality met: Users can upload Excel mark sheets and get feedback on success or failure.  
+- Improvement needed: Feedback should be more detailed and specific for failed uploads instead of generic messages.
+
+## Developer Perspective
+- Current status: The module works as intended.  
+- Improvement needed: Code reviews should happen more frequently (every three days) instead of once per sprint.  
+- UI enhancement: Shift from basic CSS to Tailwind CSS in upcoming sprints for improved styling.
